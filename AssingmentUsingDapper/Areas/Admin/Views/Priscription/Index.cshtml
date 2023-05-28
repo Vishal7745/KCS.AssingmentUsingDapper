@@ -1,0 +1,97 @@
+﻿@model AssingmentUsingDapper.Models.PatientDetails.PatientDetails
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<div>
+    <h4>PatientDetails</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.MedicalCondition)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.MedicalCondition)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Followup)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Followup)
+        </dd>
+
+        <dt class="col-sm-4">
+            Add Medicine
+        </dt>
+        <dd class="col-sm-8">
+            <select>
+                <option>--Add Medicine--</option>
+                <option>Lignocaine</option>
+                <option>Prilocaine lignocaine</option>
+                <option>Mefenamic acid capsules I.P 250 mg</option>
+                <option>Serratiopeptidase I.P  tab 5 mg</option>
+                <option>Lornoxicam tab 8 mg</option>
+                <option> Etoricoxib tab 120 mg </option>
+                <option>Morphine inj 2 mg/ml</option>
+                <option>Paracetamol suppository 100 mg</option>
+                <option>Paracetamol tab 650 mg</option>
+                <option>Diclofenac potassium tab 75 mg</option>
+                <option>Piroxicam Inj 20mg/ml</option>
+                <option>Piroxicam gel</option>
+                <option>Mefenamic acid syr 100 mg/5ml</option>
+                <option>Mefenamic acid spray</option>
+                <option>Aceclofenac gel</option>
+                <option>Etoricoxib tab 90mg</option>
+                <option>Etoricoxib tab 90mg</option>
+                <option>Lornoxicam tab 8 mg</option>
+                <option>Etoricoxib tab 60 mg</option>
+                <option>Etoricoxib tab 90mg</option>
+                <option>Etoricoxib tab 30mg</option>
+                <option>Tramadol tab 50 mg</option>
+                <option>Tramadol inj 100 mg/ml</option>
+                <option>Fentanyl inj 50 mcg/ml</option>
+            </select>
+        </dd>
+        <dt class="col-sm-4">
+          quantity
+        </dt>
+        <dd class="col-sm-8">
+          <input  type="number"/>
+        </dd>
+    </dl>
+    <a asp-action="PatientList" asp-controller="Admin" asp-area="Admin"> <input type="button" class="btn btn-primary" value="submit" /> </a>
+</div>
+<div>
+  
+    <a asp-action="PatientList" asp-controller="Admin" asp-area="Admin">Back to List</a>
+
+    <a href="@Url.Action("GeneratePDFReport", "Priscription")">Generate  Report</a>
+
+</div>
