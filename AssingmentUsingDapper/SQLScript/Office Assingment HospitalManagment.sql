@@ -27,6 +27,18 @@ end
 
 exec Usp_GetUserManagement
 --===================================================================================
+
+--Select Single userBy ID [User Management]
+Create proc Usp_GetUserManagementById
+(@id int)
+as
+begin
+   select *from [User Management]
+   where Id=@id
+end
+
+exec Usp_GetUserManagementById 6
+--===================================================================================
 --Insert Record Into LoginUser
 Create proc Usp_InsertUserManagement
 (
@@ -76,7 +88,7 @@ end
 
 --===================================================================================
 --Update [User Management] 
-create proc Usp_UpdateUserManagement
+alter proc Usp_UpdateUserProfile
 (
 @Id int,
 @FirstName varchar(20),
@@ -84,7 +96,7 @@ create proc Usp_UpdateUserManagement
 @EmailId varchar(50),
 @Password varchar(8),
 @UserRole varchar(10),
-@Passward varchar(8),
+
 @IsActive varchar(1)
 )
 as
@@ -92,7 +104,7 @@ begin
      begin tran
 	       begin try
 		          update [User Management] 
-				  set FirstName=@FirstName,LastName=@LastName,EmailId=@EmailId,Password=@Password,IsActive=@IsActive
+				  set FirstName=@FirstName,LastName=@LastName,EmailId=@EmailId,Password=@Password,UserRole=@UserRole,IsActive=@IsActive
 				  where Id=@Id;
 				  Select 'RECORD UPDATED SUCCESSFULLY' as Response
 		          COMMIT;
@@ -115,16 +127,7 @@ end
 
 exec usp_GetLogin @EmailId=[ram.charan@gamil.com],@Password=123456
 
---===================================================================================
-create table Users
-(
-MedicineName varchar(20),
-Price int,
-TotalStock int
-)
-insert into Users values('Paracitamol',10,200)
 
-select * from Users
 --===================================================================================
 
 
@@ -152,14 +155,15 @@ as
 begin
 	select * from PatientRegistration
 end
+exec Usp_ListOfPatient
 --===================================================================================
 --InsertInto Patient
-create proc Usp_InsertPatientRegistration
+alter proc Usp_InsertPatientRegistration
 (
 @FirstName varchar(20),
 @LastName varchar(20),
 @PhoneNumber varchar(50),
-@Email varchar(8),
+@Email varchar(50),
 @Address varchar(10),
 @MedicalCondition varchar(10),
 @Followup varchar(20)
@@ -179,7 +183,7 @@ end
 --===================================================================================
 --Delete From PatientRegistration
 
-create proc Usp_DeletePatientRegistration
+alter proc Usp_DeletePatientRegistration
 (@Id int 
 )
 as
@@ -202,7 +206,7 @@ exec Usp_DeletePatientRegistration 8
 
 --===================================================================================
 
-create proc Usp_PatientById
+alter proc Usp_PatientById
 (@Id int 
 )
 as
@@ -210,7 +214,7 @@ begin
 		begin tran
 			begin try
 				Select * from PatientRegistration
-				where Id=@Id;
+				where Id=2;
 				Select 'Delete Successfully'As Response
 				COMMIT;
 			end try
@@ -228,9 +232,9 @@ alter proc Usp_UpdatePatient
 @Id int,
 @FirstName varchar(20),
 @LastName varchar(20),
-@PhoneNumber varchar(50),
-@Email varchar(8),
-@Address varchar(10),
+@PhoneNumber varchar(10),
+@Email varchar(50),
+@Address varchar(50),
 @MedicalCondition varchar(10),
 @Followup varchar(20)
 )
@@ -260,17 +264,170 @@ create table MedicineManagment
 Id int Primary key identity,
 
 Medicine_Name varchar(20), 
-Price	int,
+Price int,
 Total_Stock int
 )
 insert into MedicineManagment values ('Paracetamol',10,100)
 --===================================================================================
 -- list Of Medicine Sp
 
-create Proc Usp_ListOfMedicine
+alter Proc Usp_ListOfMedicine
 as
 begin
-	Select * from MedicineManagment;
+	Select Id, Medicine_Name,Price,Total_Stock from MedicineManagment
 End
 
 exec Usp_ListOfMedicine
+--===================================================================================
+alter Proc Usp_MedicineById
+(@id int)
+as
+begin
+	Select Medicine_Name,Price,Total_Stock from MedicineManagment
+	where Id=@id;
+End
+--===================================================================================
+create proc Usp_UpdateMedicine
+(
+@Id int,
+@Medicine_Name varchar(20),
+@Price int,
+@Total_Stock int
+)
+as
+begin
+     begin tran
+	       begin try
+		          update MedicineManagment 
+				  set Medicine_Name=@Medicine_Name,Price=@Price,Total_Stock=@Total_Stock
+				  where Id=@Id;
+				  Select 'RECORD UPDATED SUCCESSFULLY' as Response
+		          COMMIT;
+		   end try
+		   begin catch
+		            select ERROR_MESSAGE() as Response
+					ROLLBACK;
+		   end catch
+end
+--===================================================================================
+create proc Usp_deleteMedicine
+(
+@Id int
+)
+as
+begin
+     begin tran
+	       begin try
+		         delete MedicineManagment
+				  where Id=@Id;
+				  Select 'RECORD UPDATED SUCCESSFULLY' as Response
+		          COMMIT;
+		   end try
+		   begin catch
+		            select ERROR_MESSAGE() as Response
+					ROLLBACK;
+		   end catch
+end
+--===================================================================================
+--insert Into Medicine
+create proc Usp_CreateMedicine
+(
+@Medicine_Name varchar(20),
+@Price int,
+@Total_Stock int
+)
+as
+begin
+     begin tran
+	       begin try
+		          Insert into MedicineManagment values(@Medicine_Name,@Price,@Total_Stock)
+				  Select 'RECORD UPDATED SUCCESSFULLY' as Response
+		          COMMIT;
+		   end try
+		   begin catch
+		            select ERROR_MESSAGE() as Response
+					ROLLBACK;
+		   end catch
+end
+go
+
+exec Usp_CreateMedicine 'Coldact',20,500
+--====================================================================================
+
+--Medicine Record
+--drop table MedicineStock
+create Table MedicineStock
+(
+MedicineCode char(10) primary key,
+MedicineName varchar(50),
+Price Double Precision,
+Medicine_In_Stock int,
+Medicine_Sold int
+)
+ insert into MedicineStock values('a1','Paracetamol',10,500,1)
+  insert into MedicineStock values('a2','Disprin',11,1500,15)
+   insert into MedicineStock values('a3','Zantac150',18,589,21)
+
+ select * from MedicineStock
+
+ --===================================================================================
+ --drop table MedicineSales
+
+ create table MedicineSales
+ (
+ Order_Id int primary key Identity,
+ Order_date date,
+ MedicineCode char(10),
+ Quantiry_Order int,
+ Sell_Price Double Precision
+ )
+
+ insert into MedicineSales values('2023-04-28','a1',100,482)
+ insert into MedicineSales values('2022-04-29','a2',54,784)
+
+ --==================================================================================
+ --==================================================================================
+ --==================================================================================
+ create table PatientRegistration
+
+(
+Id int primary key identity,
+FirstName Varchar(20) not null,
+LastName varchar(20) not null,
+PhoneNumber varchar(10) not null,
+Email Varchar(50) unique not null,
+Address varchar(100),
+MedicalCondition varchar(100) not null,
+Followup varchar(20)
+)
+--drop table details
+create table PatientDetails
+(
+	Id int primary key identity,
+	FirstName Varchar(20) not null,
+	LastName varchar(20) not null,
+	PhoneNumber varchar(10) not null,
+	MedicalCondition varchar(100) not null,
+	Followup varchar(20)
+)
+select * from PatientDetails
+alter proc Usp_Details
+@id int 
+as
+begin
+	declare @FirstName Varchar(20),
+	@LastName varchar(20),
+	@PhoneNumber varchar(10),
+	@MedicalCondition varchar(100) ,
+	@Followup varchar(20)
+	
+	select @FirstName=FirstName,@LastName=LastName,@PhoneNumber=PhoneNumber,@MedicalCondition=MedicalCondition,@Followup=Followup from PatientRegistration 
+	where id=@id
+
+	insert into PatientDetails values(@FirstName,@LastName,@PhoneNumber,@MedicalCondition,@Followup)
+
+	select * from PatientDetails where Id=@id
+
+end
+
+exec Usp_Details 1

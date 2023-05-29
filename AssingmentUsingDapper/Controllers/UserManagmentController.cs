@@ -18,7 +18,7 @@ namespace AssingmentUsingDapper.Controllers
             _userManagment = userManagment;
         }
 
-        [HttpGet]
+       /* [HttpGet]
         public IActionResult Login()
         {
             return View();
@@ -46,7 +46,8 @@ namespace AssingmentUsingDapper.Controllers
             }
 
             return View();
-        }
+        }*/
+
 
 
         public IActionResult Index()
